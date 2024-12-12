@@ -1,0 +1,5 @@
+
+Pillow
+pydantic==2.9.2
+ultralytics
+opencv-contrib-python

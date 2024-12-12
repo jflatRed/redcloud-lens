@@ -1,0 +1,34 @@
+# Dataset paths
+path: /volumes/data/dataset
+train: train/images # Path to the training images
+val: valid/images # Path to the validation images
+
+# Number of classes
+nc: 24 # Number of classes in the dataset
+
+# # Class names
+names:
+  0: sprite
+  1: lipton yellow
+  2: heineken beer
+  3: golden penny flour
+  4: guinness stout
+  5: dabur toothpaste
+  6: fanta
+  7: coca cola
+  8: dabur herbal
+  9: guinness can
+  10: sprite zero
+  11: heineken can
+  12: indomie noodles oriental fried
+  13: indomie noodles chicken
+  14: coca cola zero
+  15: lipton yellow tea bags
+  16: maggi naija
+  17: maggi star
+  18: chivita apple
+  19: chivita carrot orange
+  20: golden penny confectionary
+  21: fanta rgb
+  22: arla dano slim milk
+  23: aria dano cool cow milk
