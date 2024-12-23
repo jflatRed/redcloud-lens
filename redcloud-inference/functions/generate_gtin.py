@@ -31,7 +31,7 @@ def get_gtin_from_openai(product_name):
             messages=[
                 {
                     "role": "system",
-                    "content": "You are a helpful assistant that provides GTINs for products.Search any internal db or sources you have. only return the gtin number and return '' if not available",
+                    "content": "You are a helpful assistant that provides GTINs for products.Search any internal db or sources you have.return the ' + gtin number only if gtin number is available and return '' if not available",
                 },
                 {
                     "role": "user",
@@ -73,8 +73,8 @@ def clean_up(input_path, output_path):
     # Function to generate UUID if both fields are missing
     generated_ids = set()
 
-    def clean_sku_string(sku_valuel: str):
-        items = json.loads(sku_valuel)
+    def clean_sku_string(sku_value: str):
+        items = json.loads(sku_value)
         # Convert the list to a comma-separated string
         return ",".join(items)
 
@@ -112,35 +112,32 @@ def clean_up(input_path, output_path):
     print(f"Updated CSV with GTIN column saved to {output_path}.")
 
 
-if __name__ == "__main__":
-    clean_up(
-        "/Users/joshuaeseigbe/Downloads/GH-4 copy.csv",
-        "/Users/joshuaeseigbe/Downloads/hjk1.csv",
-    )
-
 # if __name__ == "__main__":
-#     # Read the CSV file
-#     input_csv = (
-#         "/Users/joshuaeseigbe/Downloads/x.csv"  # Replace with your input file path
+#     clean_up(
+#         "/Users/joshuaeseigbe/Downloads/GH-4 copy.csv",
+#         "/Users/joshuaeseigbe/Downloads/hjk1.csv",
 #     )
-#     output_csv = "output34.csv"  # Replace with your desired output file path
 
-#     # Load the CSV into a DataFrame
-#     df = pd.read_csv(input_csv)
+if __name__ == "__main__":
+    # Read the CSV file
+    input_csv = "/Users/joshuaeseigbe/Downloads/product_export_except_nigeria.csv"  # Replace with your input file path
+    output_csv = "output35.csv"  # Replace with your desired output file path
+    # Load the CSV into a DataFrame
+    df = pd.read_csv(input_csv)
 
-#     # Check if the 'Product Name' column exists
-#     if "Product Name" not in df.columns:
-#         raise ValueError("The 'Product Name' column is missing in the input CSV.")
+    # Check if the 'Product Name' column exists
+    if "Product Name" not in df.columns:
+        raise ValueError("The 'Product Name' column is missing in the input CSV.")
 
-#     # Add a new column for GTIN by querying the OpenAI API
-#     # df["GTIN"] = df["Product Name"].apply(get_gtin_from_openai)
-#     try:
+    # Add a new column for GTIN by querying the OpenAI API
+    df["GTIN"] = df["Product Name"].apply(get_gtin_from_openai)
+    # try:
 
-#         df["GTIN_2"] = df["Product Name"].apply(generate_gtin_from_ean)
-#     except:
-#         print("Error Occurred")
+    #     df["GTIN_2"] = df["Product Name"].apply(generate_gtin_from_ean)
+    # except:
+    #     print("Error Occurred")
 
-#     # Save the updated DataFrame to a new CSV file
-#     df.to_csv(output_csv, index=False)
+    # Save the updated DataFrame to a new CSV file
+    df.to_csv(output_csv, index=False)
 
-#     print(f"Updated CSV with GTIN column saved to {output_csv}.")
+    print(f"Updated CSV with GTIN column saved to {output_csv}.")
