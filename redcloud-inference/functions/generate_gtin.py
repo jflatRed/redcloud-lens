@@ -5,6 +5,8 @@ from openai import OpenAI
 from eansearch import EANSearch
 import uuid
 
+from urllib.parse import quote
+
 OPEN_AI_API_KEY = os.environ.get("OPENAI_API_KEY")
 EAN_SEARCH_KEY = os.environ.get("EAN_API_KEY")
 print(EAN_SEARCH_KEY)
@@ -55,7 +57,7 @@ def generate_gtin_from_ean(product_name: str):
     try:
         eansearch = EANSearch(EAN_SEARCH_KEY)
         print("got here")
-        eanList = eansearch.productSearch(product_name.replace(" ", "%20"))
+        eanList = eansearch.productSearch(quote(product_name))
 
         for product in eanList:
             if product["issuingCountry"] == "NG":
@@ -120,24 +122,41 @@ def clean_up(input_path, output_path):
 
 if __name__ == "__main__":
     # Read the CSV file
-    input_csv = "/Users/joshuaeseigbe/Downloads/product_export_except_nigeria.csv"  # Replace with your input file path
-    output_csv = "output35.csv"  # Replace with your desired output file path
-    # Load the CSV into a DataFrame
-    df = pd.read_csv(input_csv)
+    paths = [
+        # "redcloud-inference/data/agg_minus_ng/chunk_1.csv",
+        # "redcloud-inference/data/agg_minus_ng/chunk_2.csv",
+        # "redcloud-inference/data/agg_minus_ng/chunk_3.csv",
+        "redcloud-inference/data/agg_minus_ng/chunk_4.csv",
+        "redcloud-inference/data/agg_minus_ng/chunk_5.csv",
+        "redcloud-inference/data/agg_minus_ng/chunk_6.csv",
+        "redcloud-inference/data/agg_minus_ng/chunk_7.csv",
+        "redcloud-inference/data/agg_minus_ng/chunk_8.csv",
+        "redcloud-inference/data/agg_minus_ng/chunk_9.csv",
+        "redcloud-inference/data/agg_minus_ng/chunk_10.csv",
+        "redcloud-inference/data/agg_minus_ng/chunk_11.csv",
+        "redcloud-inference/data/agg_minus_ng/chunk_12.csv",
+        "redcloud-inference/data/agg_minus_ng/chunk_13.csv",
+        "redcloud-inference/data/agg_minus_ng/chunk_14.csv",
+    ]
+    for index, path in enumerate(paths):
+        input_csv = path  # Replace with your input file path
+        output_csv = f"redcloud-inference/data/revised_agg/chunk_{index+4}.csv"  # Replace with your output file path
+        # Load the CSV into a DataFrame
+        df = pd.read_csv(input_csv)
 
-    # Check if the 'Product Name' column exists
-    if "Product Name" not in df.columns:
-        raise ValueError("The 'Product Name' column is missing in the input CSV.")
+        # Check if the 'Product Name' column exists
+        if "Product Name" not in df.columns:
+            raise ValueError("The 'Product Name' column is missing in the input CSV.")
 
-    # Add a new column for GTIN by querying the OpenAI API
-    df["GTIN"] = df["Product Name"].apply(get_gtin_from_openai)
-    # try:
+        # Add a new column for GTIN by querying the OpenAI API
+        # df["GTIN"] = df["Product Name"].apply(get_gtin_from_openai)
+        try:
 
-    #     df["GTIN_2"] = df["Product Name"].apply(generate_gtin_from_ean)
-    # except:
-    #     print("Error Occurred")
+            df["GTIN_2"] = df["Product Name"].apply(generate_gtin_from_ean)
+        except:
+            print("Error Occurred")
 
-    # Save the updated DataFrame to a new CSV file
-    df.to_csv(output_csv, index=False)
+        # Save the updated DataFrame to a new CSV file
+        df.to_csv(output_csv, index=False)
 
-    print(f"Updated CSV with GTIN column saved to {output_csv}.")
+        print(f"Updated CSV with GTIN column saved to {output_csv}.")
