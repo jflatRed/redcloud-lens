@@ -75,10 +75,10 @@ def clean_up(input_path, output_path):
     # Function to generate UUID if both fields are missing
     generated_ids = set()
 
-    def clean_sku_string(sku_value: str):
-        items = json.loads(sku_value)
-        # Convert the list to a comma-separated string
-        return ",".join(items)
+    # def clean_sku_string(sku_value: str):
+    #     items = json.loads(sku_value)
+    #     # Convert the list to a comma-separated string
+    #     return ",".join(items)
 
     # A set to store previously generated identifiers
 
@@ -104,10 +104,10 @@ def clean_up(input_path, output_path):
             return row["EAN"], "EAN"
 
     df = pd.read_csv(input_path)
-    df[["Mapping", "Mapping Type"]] = df.apply(
-        lambda row: pd.Series(generate_new_field(row)), axis=1
-    )
-    df["SKU_STRING"] = df["SKU_STRING"].apply(clean_sku_string)
+    # df[["Mapping", "Mapping Type"]] = df.apply(
+    #     lambda row: pd.Series(generate_new_field(row)), axis=1
+    # )
+    # df["SKU_STRING"] = df["SKU_STRING"].apply(clean_sku_string)
     # Save the updated DataFrame to a new CSV file
     df.to_csv(output_path, index=False)
 
@@ -123,30 +123,35 @@ def clean_up(input_path, output_path):
 if __name__ == "__main__":
     # Read the CSV file
     paths = [
-        # "redcloud-inference/data/agg_minus_ng/chunk_1.csv",
-        # "redcloud-inference/data/agg_minus_ng/chunk_2.csv",
-        # "redcloud-inference/data/agg_minus_ng/chunk_3.csv",
-        "redcloud-inference/data/agg_minus_ng/chunk_4.csv",
-        "redcloud-inference/data/agg_minus_ng/chunk_5.csv",
-        "redcloud-inference/data/agg_minus_ng/chunk_6.csv",
-        "redcloud-inference/data/agg_minus_ng/chunk_7.csv",
-        "redcloud-inference/data/agg_minus_ng/chunk_8.csv",
-        "redcloud-inference/data/agg_minus_ng/chunk_9.csv",
-        "redcloud-inference/data/agg_minus_ng/chunk_10.csv",
-        "redcloud-inference/data/agg_minus_ng/chunk_11.csv",
-        "redcloud-inference/data/agg_minus_ng/chunk_12.csv",
-        "redcloud-inference/data/agg_minus_ng/chunk_13.csv",
-        "redcloud-inference/data/agg_minus_ng/chunk_14.csv",
+        "/Users/joshuaeseigbe/Downloads/product_export_except_nigeria (1).csv"
     ]
+    # paths = [
+    #     # "redcloud-inference/data/agg_minus_ng/chunk_1.csv",
+    #     # "redcloud-inference/data/agg_minus_ng/chunk_2.csv",
+    #     # "redcloud-inference/data/agg_minus_ng/chunk_3.csv",
+    #     "redcloud-inference/data/agg_minus_ng/chunk_4.csv",
+    #     "redcloud-inference/data/agg_minus_ng/chunk_5.csv",
+    #     "redcloud-inference/data/agg_minus_ng/chunk_6.csv",
+    #     "redcloud-inference/data/agg_minus_ng/chunk_7.csv",
+    #     "redcloud-inference/data/agg_minus_ng/chunk_8.csv",
+    #     "redcloud-inference/data/agg_minus_ng/chunk_9.csv",
+    #     "redcloud-inference/data/agg_minus_ng/chunk_10.csv",
+    #     "redcloud-inference/data/agg_minus_ng/chunk_11.csv",
+    #     "redcloud-inference/data/agg_minus_ng/chunk_12.csv",
+    #     "redcloud-inference/data/agg_minus_ng/chunk_13.csv",
+    #     "redcloud-inference/data/agg_minus_ng/chunk_14.csv",
+    # ]
     for index, path in enumerate(paths):
         input_csv = path  # Replace with your input file path
-        output_csv = f"redcloud-inference/data/revised_agg/chunk_{index+4}.csv"  # Replace with your output file path
+        # Replace with your output file path
+        output_csv = f"redcloud-inference/data/revised_agg/chunk_{index+4}.csv"
         # Load the CSV into a DataFrame
         df = pd.read_csv(input_csv)
 
         # Check if the 'Product Name' column exists
         if "Product Name" not in df.columns:
-            raise ValueError("The 'Product Name' column is missing in the input CSV.")
+            raise ValueError(
+                "The 'Product Name' column is missing in the input CSV.")
 
         # Add a new column for GTIN by querying the OpenAI API
         # df["GTIN"] = df["Product Name"].apply(get_gtin_from_openai)
